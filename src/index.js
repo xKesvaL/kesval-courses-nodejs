@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { db } from "./db/clientDb";
-import { tasks } from "./db/schema";
+import { db } from "./db/clientDb.js";
+import { tasks } from "./db/schema.js";
 
 const app = new Hono();
 
