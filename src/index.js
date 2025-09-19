@@ -2,8 +2,21 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { db } from "./db/clientDb.js";
 import { tasks } from "./db/schema.js";
+import { auth } from "./lib/auth.js";
+import { cors } from "hono/cors";
 
 const app = new Hono();
+
+app.use(
+  "*",
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    allowMethods: ["POST", "GET", "OPTIONS", "PUT"],
+  })
+);
+
+app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
