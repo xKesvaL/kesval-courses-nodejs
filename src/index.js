@@ -4,6 +4,7 @@ import { db } from "./db/clientDb.js";
 import { tasks } from "./db/schema.js";
 import { auth } from "./lib/auth.js";
 import { cors } from "hono/cors";
+import { Server } from "socket.io";
 
 const app = new Hono();
 
@@ -65,7 +66,7 @@ app.put("/tasks/:id", async (c) => {
   });
 });
 
-serve(
+const server = serve(
   {
     fetch: app.fetch,
     port: 3000,
@@ -74,3 +75,12 @@ serve(
     console.log(`Server is running on http://localhost:${info.port}`);
   }
 );
+
+const ioServer = new Server(server, {
+  path: "/ws",
+  serveClient: false,
+});
+
+ioServer.on("connection", (socket) => {
+  console.log("a user connected");
+});
