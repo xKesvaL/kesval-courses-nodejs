@@ -85,4 +85,10 @@ const ioServer = new Server(server, {
 
 ioServer.on("connection", (socket) => {
   console.log("a user connected");
+
+  socket.on("sendMessage", (data) => {
+    console.log(data);
+
+    socket.emit("receiveMessage", data);
+  });
 });
