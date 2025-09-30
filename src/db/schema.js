@@ -16,6 +16,13 @@ export const tasks = sqliteTable("tasks", {
   updatedAt: integer({ mode: "timestamp" }),
 });
 
+export const messages = sqliteTable("messages", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  content: text().notNull(),
+  senderId: text().notNull(),
+  receiverId: text(),
+});
+
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),

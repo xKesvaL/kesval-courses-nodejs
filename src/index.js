@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { db } from "./db/clientDb.js";
-import { tasks } from "./db/schema.js";
+import { messages, tasks } from "./db/schema.js";
 import { auth } from "./lib/auth.js";
 import { cors } from "hono/cors";
 import { Server } from "socket.io";
@@ -66,6 +66,14 @@ app.put("/tasks/:id", async (c) => {
   });
 });
 
+app.get("/messages", async (c) => {
+  const messages = await db.query.messages.findMany();
+  return c.json({
+    status: "success",
+    data: messages,
+  });
+});
+
 const server = serve(
   {
     fetch: app.fetch,
@@ -86,9 +94,15 @@ const ioServer = new Server(server, {
 ioServer.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on("sendMessage", (data) => {
-    console.log(data);
+  socket.on("sendMessage", async (data) => {
+    const msg = await db
+      .insert(messages)
+      .values({
+        content: data.message,
+        senderId: data.senderId,
+      })
+      .returning();
 
-    socket.emit("receiveMessage", data);
+    socket.emit("receiveMessage", msg.at(0));
   });
 });
