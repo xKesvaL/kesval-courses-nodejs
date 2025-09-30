@@ -77,7 +77,6 @@ const server = serve(
 );
 
 const ioServer = new Server(server, {
-  path: "/ws",
   serveClient: false,
 });
 
