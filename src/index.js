@@ -103,6 +103,8 @@ ioServer.on("connection", (socket) => {
       })
       .returning();
 
-    socket.emit("receiveMessage", msg.at(0));
+    console.log(`sending message to ${socket.id} clients`);
+
+    ioServer.emit("receiveMessage", msg.at(0));
   });
 });
