@@ -78,6 +78,9 @@ const server = serve(
 
 const ioServer = new Server(server, {
   serveClient: false,
+  cors: {
+    origin: "http://localhost:5173",
+  },
 });
 
 ioServer.on("connection", (socket) => {
